@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mis XV Años - Mariana</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@300;400;600&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
+    <style>
+        /* Estilos de la Pantalla de Entrada */
+        #entry-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, #fffcfc 0%, #fff5f6 50%, #fdfbfb 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            cursor: pointer;
+            transition: opacity 1s ease, visibility 1s;
+        }
+        #entry-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+        .entry-title {
+            font-family: 'Great Vibes', cursive;
+            font-size: 4rem;
+            color: #d4a373;
+            margin-bottom: 20px;
+        }
+        .entry-subtitle {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            color: #d4a373;
+            opacity: 0.8;
+            margin-bottom: 40px;
+        }
+        .click-hint {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.8rem;
+            color: #d4a373;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { opacity: 0.4; }
+            50% { opacity: 1; }
+            100% { opacity: 0.4; }
+        }
+
+        /* Estilos del Cuerpo */
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: radial-gradient(circle at center, #fffcfc 0%, #fff5f6 50%, #fdfbfb 100%);
+            color: #d4a373;
+            text-align: center;
+            padding: 30px 15px 80px;
+            box-sizing: border-box;
+            justify-content: flex-start;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.03;
+            pointer-events: none;
+            background-image: url("https://www.transparenttextures.com/patterns/paper-fibers.png");
+            z-index: 0;
+        }
+
+        .hearts-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 999;
+        }
+        .heart {
+            position: absolute;
+            color: #ffb7c5;
+            font-size: 20px;
+            user-select: none;
+            animation: fall linear forwards;
+        }
+        @keyframes fall {
+            0% { transform: translateY(-10vh) translateX(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(110vh) translateX(100px) rotate(360deg); opacity: 0; }
+        }
+
+        /* Contenido de la Invitación */
+        .intro, .image-container, .name, .countdown-container, .divider, .date-info, .section-info, .btn-location, .itinerary-container, .gift-container, .footer-image-container, .footer-phrase, .rsvp-container {
+            z-index: 1;
+        }
+
+        .intro {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            opacity: 0.8;
+            font-weight: 300;
+            margin-bottom: 20px;
+        }
+        .image-container {
+            width: 160px;
+            height: 240px;
+            border-radius: 80px 80px 0 0;
+            overflow: hidden;
+            border: 1.5px solid #d4a373;
+            box-shadow: 0 8px 25px rgba(212, 163, 115, 0.15);
+            background-color: #fff;
+            margin-bottom: 20px;
+        }
+        .image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center top;
+        }
+        .name {
+            font-family: 'Great Vibes', cursive;
+            font-size: 3.5rem;
+            margin: 0;
+            line-height: 1.1;
+            text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8);
+        }
+
+        .countdown-container {
+            margin: 15px 0 25px;
+            font-family: 'Montserrat', sans-serif;
+            width: 100%;
+            max-width: 300px;
+        }
+        .countdown-title {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 10px;
+            font-weight: 300;
+            opacity: 0.8;
+        }
+        .timer {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+        .timer-unit {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 40px;
+        }
+        .timer-unit .number {
+            font-size: 1.3rem;
+            font-weight: 400;
+            line-height: 1;
+        }
+        .timer-unit .label {
+            font-size: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 4px;
+            opacity: 0.5;
+        }
+
+        .divider {
+            width: 40px;
+            height: 1px;
+            background-color: #d4a373;
+            margin: 25px 0;
+            opacity: 0.4;
+        }
+
+        .date-info {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.3rem;
+            margin: 10px 0;
+            font-style: italic;
+            letter-spacing: 0.5px;
+        }
+        .section-info {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.9rem;
+            margin: 20px 0 10px;
+            font-weight: 300;
+            line-height: 1.5;
+            color: #5a5a5a;
+        }
+        .section-info strong {
+            display: block;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 0.75rem;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #d4a373;
+        }
+        .btn-location {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 12px 28px;
+            background-color: #d4a373;
+            color: #fff;
+            text-decoration: none;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 600;
+            border-radius: 25px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            box-shadow: 0 4px 15px rgba(212, 163, 115, 0.25);
+        }
+
+        /* Itinerary Styles */
+        .itinerary-container {
+            margin-top: 40px;
+            width: 100%;
+            max-width: 280px;
+            font-family: 'Montserrat', sans-serif;
+        }
+        .itinerary-title {
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 30px;
+        }
+        .timeline {
+            position: relative;
+        }
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 1px;
+            background-color: rgba(212, 163, 115, 0.4);
+            transform: translateX(-50%);
+        }
+        .timeline-item {
+            position: relative;
+            margin-bottom: 35px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+        }
+        .timeline-content {
+            display: flex;
+            align-items: center;
+            width: 100%;
+        }
+        .time-box {
+            width: 45%;
+            text-align: right;
+            padding-right: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        .event-box {
+            width: 45%;
+            text-align: left;
+            padding-left: 20px;
+            font-size: 0.8rem;
+            font-weight: 300;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .dot {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            width: 8px;
+            height: 8px;
+            background-color: #d4a373;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 0 0 4px #fff8f8;
+        }
+
+        /* Gift Section Styles */
+        .gift-container {
+            margin-top: 10px;
+            width: 100%;
+            max-width: 300px;
+            font-family: 'Montserrat', sans-serif;
+        }
+        .gift-title {
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+        .gift-text {
+            font-size: 0.9rem;
+            font-weight: 300;
+            line-height: 1.6;
+            color: #5a5a5a;
+            font-style: italic;
+        }
+        .gift-icon {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        /* Footer Image Section */
+        .footer-image-container {
+            margin-top: 40px;
+            width: 220px;
+            padding: 15px;
+            border: 1px solid rgba(212, 163, 115, 0.4);
+            border-radius: 110px 110px 0 0;
+            position: relative;
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+        .footer-image-container::before {
+            content: '';
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            right: 5px;
+            bottom: 5px;
+            border: 1px solid #d4a373;
+            border-radius: 105px 105px 0 0;
+            pointer-events: none;
+        }
+        .footer-image-wrapper {
+            width: 100%;
+            height: 300px;
+            border-radius: 100px 100px 0 0;
+            overflow: hidden;
+        }
+        .footer-image-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .footer-phrase {
+            font-family: 'Great Vibes', cursive;
+            font-size: 3rem;
+            margin-top: 20px;
+            color: #d4a373;
+        }
+
+        /* RSVP Styles */
+        .rsvp-container {
+            margin-top: 50px;
+            width: 100%;
+            max-width: 320px;
+            font-family: 'Montserrat', sans-serif;
+        }
+        .rsvp-deadline {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 15px;
+            color: #5a5a5a;
+        }
+        .btn-whatsapp {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 15px 30px;
+            background-color: #d4a373;
+            color: #fff;
+            text-decoration: none;
+            font-weight: 600;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 15px rgba(212, 163, 115, 0.3);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        @media (max-width: 480px) {
+            .name { font-size: 3.2rem; }
+            .date-info { font-size: 1.2rem; }
+            .footer-phrase { font-size: 2.5rem; }
+            .entry-title { font-size: 3rem; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Pantalla de Entrada -->
+    <div id="entry-screen" onclick="openInvitation()">
+        <h1 class="entry-title">Mariana</h1>
+        <p class="entry-subtitle">Mis XV Años</p>
+        <p class="click-hint">Haz clic para abrir</p>
+    </div>
+
+    <!-- Audio -->
+    <audio id="background-music" src="cancionxv.mp3" loop></audio>
+
+    <!-- Contenedor para la lluvia de corazones -->
+    <div class="hearts-container" id="hearts-container"></div>
+
+    <div class="intro">Mis XV Años</div>
+    
+    <div class="image-container">
+        <img src="https://mariamaria.mx/cdn/shop/files/64ad87e06c7548fc9acae8c49c268c23.jpg?v=1742859306&width=1445" alt="Vestido de Quinceañera Mariana">
+    </div>
+
+    <h1 class="name">Mariana</h1>
+
+    <div class="countdown-container">
+        <p class="countdown-title">Faltan:</p>
+        <div class="timer">
+            <div class="timer-unit">
+                <span class="number" id="days">00</span>
+                <span class="label">Días</span>
+            </div>
+            <div class="timer-unit">
+                <span class="number" id="hours">00</span>
+                <span class="label">Horas</span>
+            </div>
+            <div class="timer-unit">
+                <span class="number" id="minutes">00</span>
+                <span class="label">Minutos</span>
+            </div>
+            <div class="timer-unit">
+                <span class="number" id="seconds">00</span>
+                <span class="label">Segundos</span>
+            </div>
+        </div>
+    </div>
+    
+    <div class="divider"></div>
+
+    <div class="date-info">
+        Sábado 29 de Agosto, 13:00 hrs
+    </div>
+
+    <div class="section-info">
+        <strong>Ceremonia Religiosa</strong>
+        Iglesia Cristina Bethel
+    </div>
+    <a href="https://www.google.com/maps/search/Iglesia+Cristina+Bethel" target="_blank" class="btn-location">Ver Ubicación</a>
+
+    <div class="divider"></div>
+
+    <div class="section-info">
+        <strong>Salón de Fiestas</strong>
+        Holliday Inn Express
+    </div>
+    <a href="https://www.google.com/maps/search/Holliday+Inn+Express" target="_blank" class="btn-location">Ver Ubicación</a>
+
+    <div class="divider"></div>
+
+    <div class="itinerary-container">
+        <h2 class="itinerary-title">Itinerario</h2>
+        <div class="timeline">
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <div class="time-box">17:00 hrs</div>
+                    <div class="dot"></div>
+                    <div class="event-box">Recepción</div>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <div class="time-box">18:00 hrs</div>
+                    <div class="dot"></div>
+                    <div class="event-box">Comida</div>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <div class="time-box">19:00 hrs</div>
+                    <div class="dot"></div>
+                    <div class="event-box">Vals</div>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <div class="time-box">20:00 hrs</div>
+                    <div class="dot"></div>
+                    <div class="event-box">Fiesta</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="gift-container">
+        <span class="gift-icon">✉️</span>
+        <h2 class="gift-title">Mesa de Regalos</h2>
+        <p class="gift-text">
+            "Mi mayor regalo es tu presencia, pero si gustas algún detalle, habrá lluvia de sobres ese día."
+        </p>
+    </div>
+
+    <div class="footer-image-container">
+        <div class="footer-image-wrapper">
+            <img src="https://mariamaria.mx/cdn/shop/files/b57b56534a2b4a9c9e044a77f09d740b.jpg?v=1742859305" alt="Mariana XV">
+        </div>
+    </div>
+    <p class="footer-phrase">¡Te esperamos!</p>
+
+    <div class="rsvp-container">
+        <p class="rsvp-deadline">Confirmar asistencia antes del 20 de Junio, 2026</p>
+        <a href="https://wa.me/?text=Hola!%20Confirmo%20mi%20asistencia%20a%20los%20XV%20de%20Mariana" target="_blank" class="btn-whatsapp">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.7 17.7 69.4 26.9 106.2 26.9h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zm-157 341.6c-33.1 0-65.7-8.9-94-25.7l-6.7-4-69.8 18.3L72 359.2l-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-84.9 184.6-186.6 184.6zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-5.5-2.8-23.2-8.5-44.2-27.1-16.4-14.6-27.4-32.7-30.6-38.2-3.2-5.6-.3-8.6 2.5-11.3 2.5-2.5 5.6-6.5 8.3-9.7 2.8-3.3 3.7-5.6 5.6-9.3 1.9-3.7 1-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 13.2 5.8 23.5 9.2 31.5 11.8 13.3 4.2 25.4 3.6 35 2.2 10.7-1.6 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.6z"/></svg>
+            Confirmar por WhatsApp
+        </a>
+    </div>
+
+    <script>
+        // Función para abrir la invitación y reproducir música
+        function openInvitation() {
+            const entryScreen = document.getElementById('entry-screen');
+            const music = document.getElementById('background-music');
+            
+            // Ocultar pantalla de entrada
+            entryScreen.classList.add('hidden');
+            
+            // Reproducir música
+            music.play().catch(error => {
+                console.log("Error al reproducir audio:", error);
+            });
+
+            // Iniciar lluvia de corazones
+            setInterval(createHeart, 300);
+        }
+
+        // Lógica de la cuenta regresiva
+        const countDownDate = new Date("Aug 29, 2026 13:00:00").getTime();
+        const x = setInterval(function() {
+            const now = new Date().getTime();
+            const distance = countDownDate - now;
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            if (document.getElementById("days")) {
+                document.getElementById("days").innerHTML = days.toString().padStart(2, '0');
+                document.getElementById("hours").innerHTML = hours.toString().padStart(2, '0');
+                document.getElementById("minutes").innerHTML = minutes.toString().padStart(2, '0');
+                document.getElementById("seconds").innerHTML = seconds.toString().padStart(2, '0');
+            }
+
+            if (distance < 0) {
+                clearInterval(x);
+                document.querySelector(".countdown-container").innerHTML = "<p class='countdown-title'>¡Llegó el día!</p>";
+            }
+        }, 1000);
+
+        // Lógica para la lluvia de corazones
+        function createHeart() {
+            const container = document.getElementById('hearts-container');
+            const heart = document.createElement('div');
+            heart.classList.add('heart');
+            heart.innerHTML = '❤️';
+            heart.style.left = Math.random() * 100 + 'vw';
+            const size = Math.random() * 20 + 10 + 'px';
+            heart.style.fontSize = size;
+            const duration = Math.random() * 3 + 4 + 's';
+            heart.style.animationDuration = duration;
+            heart.style.opacity = Math.random() * 0.5 + 0.3;
+            container.appendChild(heart);
+            setTimeout(() => { heart.remove(); }, parseFloat(duration) * 1000);
+        }
+    </script>
+</body>
+</html>
